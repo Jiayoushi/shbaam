@@ -19,10 +19,6 @@ language: generic
 services:
   - docker
 
-env:
-  - test_result=0
-
-
 before_script:
   - docker build -t shbaam .
   - docker run shbaam
