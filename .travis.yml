@@ -28,10 +28,9 @@ before_script:
   - docker run shbaam
 
 script:
-  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-  #- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; fi
-  - docker tag shbaam $DOCKER_USERNAME/shbaam; fi
-  - docker push $DOCKER_USERNAME/shbaam; fi
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker tag shbaam $DOCKER_USERNAME/shbaam
+  - docker push $DOCKER_USERNAME/shbaam
 
 #*******************************************************************************
 #End
