@@ -19,6 +19,9 @@ language: generic
 services:
   - docker
 
+env:
+  - test_result=0
+
 install:
   - docker build -t shbaam .
 
