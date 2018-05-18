@@ -22,17 +22,15 @@ services:
 env:
   - test_result=0
 
-install:
-  - docker build -t shbaam .
 
 before_script:
+  - docker build -t shbaam .
   - docker run shbaam
 
 script:
-  - if [ $test_result -eq 0 ]; then echo "wtf?"; fi
-  - if [ $test_result -eq 0 ]; then echo "1" && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; fi
-  - if [ $test_result -eq 0 ]; then echo "1" && docker tag shbaam $DOCKER_USERNAME/shbaam; fi
-  - if [ $test_result -eq 0 ]; then echo "1" && docker push $DOCKER_USERNAME/shbaam; fi
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; fi
+  - docker tag shbaam $DOCKER_USERNAME/shbaam; fi
+  - docker push $DOCKER_USERNAME/shbaam; fi
 
 #*******************************************************************************
 #End

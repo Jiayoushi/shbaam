@@ -50,7 +50,7 @@ COPY . .
 #Intended (default) command at execution of image (not used during build)
 #*******************************************************************************
 #CMD cd tst && ./tst_pub_dwnl_David_etal_201x_SER.sh && ./tst_pub_repr_David_etal_201x_SER.sh
-CMD echo "nices" && exit 1
+CMD echo "nices"
 
 #*******************************************************************************
 #End
