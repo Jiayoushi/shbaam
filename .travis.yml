@@ -23,8 +23,8 @@ env:
   - PROJECT_NAME="shbaam"
 
 before_script:
-  - docker build -t $PROJECT_NAME .
-  - docker run $PROJECT_NAME
+  - docker build -t "$PROJECT_NAME" .
+  - docker run "$PROJECT_NAME"
 
 script:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
