@@ -34,23 +34,22 @@ COPY . .
 #*******************************************************************************
 #Operating System Requirements
 #*******************************************************************************
-#RUN  apt-get update && \
-#     apt-get install -y $(grep -v -E '(^#|^$)' requirements.apt) && \
-#     rm -rf /var/lib/apt/lists/*
+RUN  apt-get update && \
+     apt-get install -y $(grep -v -E '(^#|^$)' requirements.apt) && \
+     rm -rf /var/lib/apt/lists/*
 
 
 #*******************************************************************************
 #Python requirements
 #*******************************************************************************
-#RUN  pip install $(grep setuptools requirements.pip) && \
-#     pip install -r requirements.pip
+RUN  pip install $(grep setuptools requirements.pip) && \
+     pip install -r requirements.pip
 
 
 #*******************************************************************************
 #Intended (default) command at execution of image (not used during build)
 #*******************************************************************************
-#CMD cd tst && ./tst_pub_dwnl_David_etal_201x_SER.sh && ./tst_pub_repr_David_etal_201x_SER.sh
-CMD echo "nices"
+CMD cd tst && ./tst_pub_dwnl_David_etal_201x_SER.sh && ./tst_pub_repr_David_etal_201x_SER.sh
 
 #*******************************************************************************
 #End
