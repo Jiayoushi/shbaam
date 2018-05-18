@@ -2,6 +2,7 @@
 #.travis.yml
 #*******************************************************************************
 
+
 #Purpose:
 #Travis CI is a hosted continuous integration service, that is, it allows 
 #running code directly from a repository and checking that the code acts as 
@@ -11,78 +12,23 @@
 #Cedric H. David, 2017-2018
 
 
-#*******************************************************************************
-#System specifications for Travis CI
-#*******************************************************************************
-matrix:
-  include:
-    - os: linux
-      language: generic
-      sudo: required
-    - os: osx
-      language: generic
-  allow_failures:
-    - os: osx
+sudo: required
 
+language: generic
 
-#*******************************************************************************
-#Environment variables for different tests on multiple Travis CI workers
-#*******************************************************************************
-env:
-- TST_PUB_DWNL='./tst_pub_dwnl_David_etal_201x_SER.sh' TST_PUB_REPR='./tst_pub_repr_David_etal_201x_SER.sh'
+services:
+  - docker
 
-
-#*******************************************************************************
-#Before installing SHBAAM
-#*******************************************************************************
-before_install:
-
-#-------------------------------------------------------------------------------
-#Specific to Linux
-#-------------------------------------------------------------------------------
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then apt-get --version             ; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y $(grep -v -E '(^#|^$)' requirements.apt) ; fi
-
-
-#-------------------------------------------------------------------------------
-#Specific to OSX
-#-------------------------------------------------------------------------------
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew --version                  ; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then rm /usr/local/include/c++ ; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew reinstall $(grep -v -E '(^#|^$)' requirements.brw) ; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ln -s /usr/local/bin/python2 /usr/local/bin/python ; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ln -s /usr/local/bin/pip2 /usr/local/bin/pip ; fi
-
-#-------------------------------------------------------------------------------
-#General environment details
-#-------------------------------------------------------------------------------
-- uname -a
-- echo $TRAVIS_OS_NAME
-- which python
-- python --version
-- ls -l $(which python)
-- ls -l $(which -a python)
-- which pip
-- pip --version
-- ls -l $(which pip)
-- ls -l $(which -a pip)
-
-
-#*******************************************************************************
-#Installing SHBAAM
-#*******************************************************************************
 install:
-- sudo pip install -r requirements.pip
+  - docker build -t shbaam .
 
-
-#*******************************************************************************
-#Testing SHBAAM
-#*******************************************************************************
 script:
-- cd ./tst/
-- echo $TST_PUB_DWNL && $TST_PUB_DWNL
-- echo $TST_PUB_REPR && $TST_PUB_REPR
-
+  - docker run shbaam  && test_result=$?
+  - echo $test_result
+  - if [ $test_result -eq 0 ]; then echo "wtf?"; fi
+  - if [ $test_result -eq 0 ]; then echo "1" && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; fi
+  - if [ $test_result -eq 0 ]; then echo "1" && docker tag shbaam $DOCKER_USERNAME/shbaam; fi
+  - if [ $test_result -eq 0 ]; then echo "1" && docker push $DOCKER_USERNAME/shbaam; fi
 
 #*******************************************************************************
 #End
