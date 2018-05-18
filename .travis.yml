@@ -25,9 +25,10 @@ env:
 install:
   - docker build -t shbaam .
 
+before_script:
+  - docker run shbaam
+
 script:
-  - docker run shbaam  && test_result=$?
-  - echo $test_result
   - if [ $test_result -eq 0 ]; then echo "wtf?"; fi
   - if [ $test_result -eq 0 ]; then echo "1" && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; fi
   - if [ $test_result -eq 0 ]; then echo "1" && docker tag shbaam $DOCKER_USERNAME/shbaam; fi
