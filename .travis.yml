@@ -11,26 +11,38 @@
 #Author:
 #Cedric H. David, 2017-2018
 
-# sudo is required for most docker commands
-#sudo: required
-
 # Choose generic to aovid installing other language
 language: generic
 
-# 
+# Travis CI automatically routes builds to run on our Trusty sudo-enabled 
+# infrastructure when services: docker is configured.  
+# https://docs.travis-ci.com/user/docker/
 services:
   - docker
 
 env:
   - PROJECT_NAME="shbaam"
 
+
+# Build image and run test
 before_script:
   - docker build -t "$PROJECT_NAME" .
+  
+  # If the test fails, Travsi-CI stops here
   - docker run "$PROJECT_NAME"
 
+# Push image
+# https://docs.docker.com/docker-cloud/builds/push-images/
 script:
+  # echo password to docker login commands 
+  # There is an alternative command option, but using STDIN is more secure, as
+  # explained on https://docs.docker.com/engine/reference/commandline/login/#provide-a-password-using-stdin
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  
+  # Must tag before push
   - docker tag "$PROJECT_NAME" "$DOCKER_USERNAME/$PROJECT_NAME"
+
+
   - docker push "$DOCKER_USERNAME/$PROJECT_NAME"
 
 #*******************************************************************************
